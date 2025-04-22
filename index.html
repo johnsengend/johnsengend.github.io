@@ -198,6 +198,11 @@
       height: 100%;
       object-fit: cover; /* Ensures the image covers the container without distortion */
       border-radius: 15px; /* Curved corners */
+      transition: transform 0.3s ease; /* Add hover effect */
+    }
+
+    .square-image:hover {
+      transform: scale(1.05); /* Slightly enlarge the image on hover */
     }
 
     .projects_section h2 {
@@ -236,11 +241,12 @@
       background: var(--primary-color);
       color: var(--text-light);
       padding: 3rem 0 1.5rem;
+      text-align: center; /* Center the footer content */
     }
     .footer_content {
       display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
+      flex-direction: column; /* Stack items vertically */
+      align-items: center; /* Center align items */
     }
     .footer_social h4, .contact_us h4 {
       margin-bottom: 1rem;
@@ -258,7 +264,7 @@
       color: var(--accent-color);
     }
     .contact_us {
-      text-align: right;
+      text-align: center; /* Center align the contact info */
     }
     .contact_us a {
       text-decoration: none;
@@ -288,9 +294,6 @@
       margin-top: 2rem;
       padding-top: 1rem;
       border-top: 1px solid rgba(255,255,255,0.1);
-    }
-    .footer_logo {
-      max-width: 150px; /* Adjust the size as needed */
     }
 
     /* Responsive Adjustments */
@@ -453,6 +456,10 @@
             <img src="images/home-image5.png" alt="Advisory Services" class="square-image">
           </div>
           <h4>Advisory</h4>
+          <p>
+            Today Offshore Innovation is involved in providing advice and consultancy in technology
+            as well as investment opportunities in the agriculture, fisheries, and sports sectors.
+          </p>
           <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#advisoryModal">
             Read More
           </button>
@@ -463,6 +470,9 @@
             <img src="images/home-image6.png" alt="Education Initiatives" class="square-image">
           </div>
           <h4>Education</h4>
+          <p>
+            Through engagement with the Norwegian-supported Nyenga Foundation in Uganda, we contribute to empowering the young generation by supporting education, agriculture, and sports initiatives.
+          </p>
           <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#educationModal">
             Read More
           </button>
@@ -473,6 +483,9 @@
             <img src="images/home-image7.png" alt="Agriculture Innovations" class="square-image">
           </div>
           <h4>Agriculture</h4>
+          <p>
+            Offshore Innovation is a proud partner of Amfri Farms, the first and foremost fully certified Demeter organic farm in Africa south of the Sahara.
+          </p>
           <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#agricultureModal">
             Read More
           </button>
@@ -483,6 +496,9 @@
             <img src="images/home-image8.png" alt="Sports Development" class="square-image">
           </div>
           <h4>Sport</h4>
+          <p>
+            In collaboration with the Norwegian Football Academy, we help identify and nurture Africa’s emerging football talents.
+          </p>
           <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#sportsModal">
             Read More
           </button>
@@ -493,6 +509,9 @@
             <img src="images/home-image9.png" alt="ICT Solutions" class="square-image">
           </div>
           <h4>ICT</h4>
+          <p>
+            Offshore Innovation pioneers ICT advancements by providing expert consulting in Artificial Intelligence, 5G, and emerging 6G technologies.
+          </p>
           <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ictModal">
             Read More
           </button>
@@ -598,10 +617,6 @@
           <p>Address: Elisenbergveien 20A, 0265 Oslo, Norway</p>
           <p>Tel./WhatsApp: +47 99705017</p>
           <p>Email: mail@offshore-innovation.com</p>
-        </div>
-        <!-- Logo Image -->
-        <div class="footer_logo">
-          <img src="images/logo2.png" alt="Logo 2">
         </div>
       </div>
       <div class="copyright">
