@@ -114,31 +114,38 @@
     .partners_section .partner-list {
       list-style: none;
       padding: 0;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
     }
     .partners_section .partner-list li {
-      margin-bottom: 1rem;
+      margin: 0 1rem 1rem 0;
     }
     .partners_section .partner-list a {
-      color: var(--primary-color);
-      text-decoration: none;
-      transition: color 0.3s ease;
+      display: inline-block;
     }
-    .partners_section .partner-list a:hover {
-      color: var(--accent-color);
+    .partners_section .partner-list img {
+      max-width: 150px; /* Adjust the size as needed */
+      height: auto;
+      transition: transform 0.3s ease;
+    }
+    .partners_section .partner-list img:hover {
+      transform: scale(1.1);
     }
 
     /* Footer */
     .footer_section {
       background: var(--primary-color);
       color: var(--text-light);
-      padding: 1.5rem 0 0.8rem;
+      padding: 1rem 0; /* Reduced height */
+      text-align: center; /* Center content */
     }
     .footer_content {
       display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
+      flex-direction: column;
+      align-items: center;
     }
-    .footer_social h4, .contact_us h4 {
+    .footer_social h4 {
       margin-bottom: 1rem;
     }
     .social_icons {
@@ -151,15 +158,6 @@
       transition: color 0.3s ease;
     }
     .social_icons a:hover {
-      color: var(--accent-color);
-    }
-    .contact_us {
-      text-align: right;
-    }
-    .contact_us a {
-      text-decoration: none;
-    }
-    .contact_us a:hover {
       color: var(--accent-color);
     }
     .linkedin-button {
@@ -181,8 +179,8 @@
     }
     .copyright {
       text-align: center;
-      margin-top: 2rem;
-      padding-top: 1rem;
+      margin-top: 1rem;
+      padding-top: 0.5rem;
       border-top: 1px solid rgba(255,255,255,0.1);
     }
 
@@ -192,10 +190,6 @@
         flex-direction: column;
         align-items: center;
         text-align: center;
-      }
-      .contact_us {
-        text-align: center;
-        margin-top: 2rem;
       }
     }
   </style>
@@ -255,9 +249,21 @@
     <div class="container text-center">
       <h2>Our Partners</h2>
       <ul class="partner-list">
-        <li><a href="https://www.nyenga.org/?lang=en" target="_blank">Nyenga Foundation</a></li>
-        <li><a href="https://www.african-organic.com/" target="_blank">Afri Farms</a></li>
-        <li><a href="https://www.zfc-sports.com/" target="_blank">ZFC Sports</a></li>
+        <li>
+          <a href="https://www.nyenga.org/?lang=en" target="_blank">
+            <img src="images/Nyenga.png" alt="Nyenga Foundation">
+          </a>
+        </li>
+        <li>
+          <a href="https://www.african-organic.com/" target="_blank">
+            <img src="images/Amfri.png" alt="Afri Farms">
+          </a>
+        </li>
+        <li>
+          <a href="https://www.zfc-sports.com/" target="_blank">
+            <img src="images/ZFC.png" alt="ZFC Sports">
+          </a>
+        </li>
       </ul>
     </div>
   </section>
@@ -270,8 +276,7 @@
         <div class="footer_social">
           <h4>Connect With Us</h4>
           <div class="social_icons">
-            <!-- Existing icons -->
-            <a href="#"><i class="fa fa-linkedin"></i></a>
+            <!-- Removed LinkedIn icon -->
             <a href="#"><i class="fa fa-envelope"></i></a>
           </div>
           <!-- NEW LinkedIn Button below "Connect With Us" -->
@@ -282,14 +287,6 @@
           >
             <i class="fa fa-linkedin"></i> Connect on LinkedIn
           </a>
-        </div>
-
-        <!-- Contact Us -->
-        <div class="contact_us">
-          <h4>Contact Us</h4>
-          <p>Address: Elisenbergveien 20A, 0265 Oslo, Norway</p>
-          <p>Tel./WhatsApp: +47 99705017</p>
-          <p>Email: mail@offshore-innovation.com</p>
         </div>
       </div>
       <div class="copyright">
