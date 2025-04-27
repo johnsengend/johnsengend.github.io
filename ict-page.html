@@ -4,9 +4,9 @@
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-  <meta name="description" content="Join Offshore Innovation as a partner or colleague and be part of our innovative projects." />
+  <meta name="description" content="Offshore Innovation offers expert consultancy in AI, Telecommunications and 5G/6G technologies." />
   <meta name="author" content="Offshore Innovation" />
-  <title>Join Us - Offshore Innovation</title>
+  <title>AI & Telecommunications - Offshore Innovation</title>
 
   <!-- Bootstrap & Fonts -->
   <link rel="stylesheet" href="css/bootstrap.css" />
@@ -65,27 +65,6 @@
       color: var(--accent-color) !important;
     }
 
-    .join-us-section {
-      padding: 6rem 0 4rem;
-      background-color: var(--background-light);
-    }
-    .join-us-section h2 {
-      font-size: 2.5rem;
-      color: var(--primary-color);
-      margin-bottom: 2rem;
-      text-align: center;
-    }
-    .join-us-section .box {
-      margin-bottom: 2rem;
-    }
-    .join-us-section .box h3 {
-      color: var(--secondary-color);
-      margin-bottom: 0.8rem;
-    }
-    .join-us-section p {
-      font-size: 1.1rem;
-    }
-
     .footer_section {
       background: var(--primary-color);
       color: var(--text-light);
@@ -121,23 +100,6 @@
     .contact_us a:hover {
       color: var(--accent-color);
     }
-    .linkedin-button {
-      margin-top: 1rem;
-      display: inline-block;
-      background-color: #0077b5;
-      color: #fff;
-      padding: 0.5rem 1rem;
-      border-radius: 4px;
-      text-decoration: none;
-      font-weight: 600;
-      transition: background-color 0.3s ease;
-    }
-    .linkedin-button:hover {
-      background-color: #005c82;
-    }
-    .linkedin-button i {
-      margin-right: 0.3rem;
-    }
     .copyright {
       text-align: center;
       margin-top: 2rem;
@@ -145,38 +107,106 @@
       border-top: 1px solid rgba(255,255,255,0.1);
     }
 
-    /* Custom styles for the new layout */
-    .join-us-section .row {
-      display: flex;
-      align-items: flex-start;
-    }
-    .join-us-section .col-image {
-      flex: 1;
-      max-width: 300px;
-      margin-right: 2rem;
-    }
-    .join-us-section .col-image img {
-      width: 100%;
-      height: auto;
-      border: 1px solid #ddd;
-    }
-    .join-us-section .col-text {
-      flex: 2;
-    }
-    .join-us-section .col-text .box {
-      margin-bottom: 1rem;
-    }
-    .join-us-section .col-text .box p {
-      border-bottom: 1px solid #ddd;
-      padding-bottom: 0.5rem;
+    /* AI & Telecom Section Styles */
+    .ai-telecom-section {
+      padding: 6rem 0 4rem;
+      background-color: var(--background-light);
     }
     
-    /* Additional styles for below image content */
-    .image-text {
-      margin-top: 20px;
-      border: 1px solid #ddd;
-      padding: 15px;
-      background-color: var(--background-light);
+    .ai-telecom-section h2 {
+      font-size: 2.5rem;
+      color: var(--primary-color);
+      margin-bottom: 1.5rem;
+      font-weight: 700;
+    }
+    
+    .ai-telecom-section p.intro {
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+      line-height: 1.7;
+    }
+    
+    .hero-image {
+      width: 100%;
+      border-radius: 5px;
+      margin: 1.5rem 0 2.5rem;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .expertise-heading {
+      font-size: 2.2rem;
+      color: var(--primary-color);
+      margin: 2rem 0 1.5rem;
+      font-weight: 600;
+    }
+    
+    .expertise-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    
+    @media (max-width: 991px) {
+      .expertise-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
+    @media (max-width: 767px) {
+      .expertise-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    .expertise-card {
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: transform 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    }
+    
+    .expertise-card:hover {
+      transform: translateY(-5px);
+    }
+    
+    .expertise-card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+    
+    .expertise-content {
+      padding: 1.5rem;
+    }
+    
+    .expertise-content h3 {
+      font-size: 1.4rem;
+      color: var(--secondary-color);
+      margin-bottom: 0.8rem;
+      font-weight: 600;
+    }
+    
+    .expertise-content p {
+      font-size: 1rem;
+      margin-bottom: 0;
+    }
+    
+    .cta-button {
+      display: inline-block;
+      background-color: var(--secondary-color);
+      color: #fff;
+      padding: 0.75rem 1.5rem;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: 600;
+      margin-top: 1.5rem;
+      transition: background-color 0.3s ease;
+    }
+    
+    .cta-button:hover {
+      background-color: var(--primary-color);
+      color: #fff;
     }
   </style>
 </head>
@@ -199,46 +229,56 @@
             <li class="nav-item"><a class="nav-link" href="team.html">Leadership & Partners</a></li>
             <li class="nav-item"><a class="nav-link" href="index.html#projects">Projects</a></li>
             <li class="nav-item"><a class="nav-link" href="index.html#footer">Contact Us</a></li>
-            <li class="nav-item"><a class="nav-link active" href="join-us.html">Join Us</a></li>
+            <li class="nav-item"><a class="nav-link" href="join-us.html">Join Us</a></li>
           </ul>
         </div>
       </nav>
     </div>
   </header>
 
-  <!-- Join Us Section -->
-  <section class="join-us-section">
+  <!-- AI & Telecommunications Section -->
+  <section class="ai-telecom-section">
     <div class="container">
-      <h2>Pioneering ICT for Sustainable Growth</h2>
-      <div class="row">
-        <div class="col-image">
-          <img src="images/1.png" alt="Company Image">
-          
-          <div class="image-text">
-            <h4>Sustainable Transportation</h4>
-            <p>Electric vehicles (EVs) represent the future of green transportation. Norway is a global leader in EV adoption, with more than 80% of new cars being electric. Oslo, in particular, is transforming into a model eco-city. This shift contributes to cleaner air, reduced carbon emissions, and a sustainable transport ecosystem.</p>
+      <h2>Harnessing AI for Business Transformation</h2>
+      
+      <p class="intro">
+        Artificial Intelligence is a catalyst for innovation and efficiency. AI has become highly influential across industries. Your business can benefit by enhancing decision-making, automating routine tasks, improving customer experiences, and unlocking new growth opportunities. We provide consultancy services and creative solutions on how AI can revolutionize your business operations and strategy.
+      </p>
+      
+      <img src="images/AI.png" alt="AI Business Transformation" class="hero-image" onerror="this.src='/api/placeholder/800/400'">
+      
+      <h2 class="expertise-heading">Our Areas of Expertise</h2>
+      
+      <div class="expertise-grid">
+        <div class="expertise-card">
+          <img src="images/AI2.png" alt="Artificial Intelligence" onerror="this.src='/api/placeholder/400/200'">
+          <div class="expertise-content">
+            <h3>Artificial Intelligence</h3>
+            <p>Tools like AI agents are revolutionizing every sector. We offer deep knowledge and experience in developing AI solutions for business applications. Our consultancy helps companies implement and optimize AI tools, making AI the new pathway for business success.</p>
+
           </div>
         </div>
-        <div class="col-text">
-          <div class="box">
-            <p><strong>Our Company</strong> is proud to be at the forefront of technological advancement in Norway. We offer expert consultation services in areas such as Artificial Intelligence, Smart Infrastructure, Next-Gen Networks (5G/6G), and Sustainable Transport Solutions. Get in touch with us to learn how we can support your innovation journey.</p>
-          </div>
-
-          <div class="box">
-            <h3>Artificial Intelligence and Language Models</h3>
-            <p>Artificial Intelligence (AI) is rapidly transforming industries by enhancing automation, analytics, and intelligent systems. Tools like <strong>ChatGPT</strong> by OpenAI are leading this revolution by enabling natural interactions between humans and machines, making AI more accessible in everyday business and personal tasks.</p>
-          </div>
-
-          <div class="box">
-            <h3>Smart City Infrastructure</h3>
-            <p>Smart cities use ICT and IoT to improve urban life through data-driven services. Norway is implementing cutting-edge smart infrastructure, ensuring sustainability, energy efficiency, and improved public services. From intelligent traffic systems to efficient energy use, smart infrastructure is reshaping urban landscapes.</p>
-          </div>
-
-          <div class="box">
-            <h3>The Future of Connectivity: 6G</h3>
-            <p>6G will build upon the capabilities of 5G, enabling ultra-fast speeds, low latency, and massive connectivity. It will empower innovations like holographic communication, digital twins, and immersive virtual experiences. Norway is investing in R&D to be a leader in this next wave of telecom evolution.</p>
+        
+        <div class="expertise-card">
+          <img src="images/5G6G.png" alt="Telecommunications (5G and 6G)" onerror="this.src='/api/placeholder/400/200'">
+          <div class="expertise-content">
+            <h3>Telecommunications (5G and 6G)</h3>
+            <p>Proficiency in cutting-edge 5G and 6G telecommunications technologies. We guide businesses through the implementation of next-generation connectivity solutions that enable faster data transfer, reduced latency, and support for innovative applications.</p>
           </div>
         </div>
+        
+        <div class="expertise-card">
+          <img src="images/Tel.png" alt="New Communications Infrastructures" onerror="this.src='/api/placeholder/400/200'">
+          <div class="expertise-content">
+            <h3>New Communications Infrastructures</h3>
+            <p>Specializes in modern communication infrastructure development. We help organizations build robust, future-proof communication systems that can support advanced AI implementations and increasing data demands.</p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="mt-5 text-center">
+        <p>Ready to transform your business with AI and next-generation telecommunications?</p>
+        <a href="index.html#footer" class="cta-button">Contact Our Consultants</a>
       </div>
     </div>
   </section>
