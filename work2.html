@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offshore technology</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            overflow-x: hidden;
+        }
+        
+        /* Loading animation */
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #1e3a8a, #1e40af, #3730a3);
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #374151;
+            border-top: 5px solid #60a5fa;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #1e3a8a;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #60a5fa;
+            border-radius: 4px;
+        }
+
+        /* Pulse animation for live indicator */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .animate-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        /* Hover effects */
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Simple chart styles */
+        .chart-container {
+            position: relative;
+            height: 200px;
+            background: rgba(30, 58, 138, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+            margin: 10px 0;
+        }
+
+        .chart-bar {
+            background: linear-gradient(45deg, #3B82F6, #8B5CF6);
+            transition: all 0.3s ease;
+            border-radius: 4px;
+            margin: 2px;
+        }
+
+        .chart-bar:hover {
+            opacity: 0.8;
+            transform: scaleY(1.05);
+        }
+
+        .live-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background: #10B981;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+            margin-right: 8px;
+        }
+
+        .critical-alert {
+            animation: flashRed 2s infinite;
+        }
+
+        @keyframes flashRed {
+            0%, 50% { background-color: rgba(220, 38, 38, 0.2); }
+            25%, 75% { background-color: rgba(220, 38, 38, 0.4); }
+        }
+
+        .warning-alert {
+            animation: flashOrange 3s infinite;
+        }
+
+        @keyframes flashOrange {
+            0%, 50% { background-color: rgba(245, 101, 101, 0.2); }
+            25%, 75% { background-color: rgba(245, 101, 101, 0.3); }
+        }
+
+        .status-green { background: linear-gradient(45deg, #059669, #10B981); }
+        .status-yellow { background: linear-gradient(45deg, #D97706, #F59E0B); }
+        .status-red { background: linear-gradient(45deg, #DC2626, #EF4444); }
+    </style>
+</head>
+<body>
+    <!-- Loading screen -->
+    <div id="loading" class="loading">
+        <div class="text-center">
+            <div class="spinner mb-4"></div>
+            <p class="text-white text-lg">Loading Real-Time Operations Dashboard...</p>
+        </div>
+    </div>
+
+    <!-- Dashboard container -->
+    <div id="dashboard-root" style="display: none;">
+        <div class="min-h-screen bg-gradient-to-br from-blue-900 via-blue-800 to-indigo-900 p-4">
+            <div class="max-w-7xl mx-auto">
+                <!-- Header with live indicator -->
+                <div class="text-center mb-8">
+                    <div class="flex items-center justify-center space-x-3 mb-4">
+                        <h1 class="text-4xl font-bold text-white">Offshore Operations Control Center</h1>
+                        <div class="flex items-center space-x-2">
+                            <div class="live-indicator"></div>
+                            <span class="text-sm text-blue-200">LIVE</span>
+                        </div>
+                        <button onclick="toggleLive()" id="liveToggle" class="ml-4 px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-xs rounded transition-colors">
+                            Pause
+                        </button>
+                    </div>
+                    <p class="text-blue-200">Real-time Offshore Operations & Risk Management - Barents Sea</p>
+                    <p class="text-blue-300 text-sm">Last Update: <span id="lastUpdate"></span> | Current Status: <span id="operationalStatus" class="font-semibold text-green-400">OPERATIONAL</span></p>
+                </div>
+
+                <!-- Critical Alerts Banner -->
+                <div id="alertsBanner" class="mb-6 space-y-2"></div>
+
+                <!-- Live KPI Cards - Offshore Industry Focused -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+                    <!-- Weather Window Status -->
+                    <div class="bg-blue-800/50 backdrop-blur-sm border border-blue-600/30 rounded-lg p-4 card-hover">
+                        <div class="flex items-center space-x-3">
+                            <div class="text-2xl" id="weatherIcon">🌊</div>
+                            <div>
+                                <p class="text-blue-200 text-sm">Weather Window</p>
+                                <p class="text-white text-xl font-bold" id="weatherStatus">OPEN</p>
+                                <p class="text-xs" id="weatherRisk">Next closure: 18h</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Supply Chain & Logistics -->
+                    <div class="bg-blue-800/50 backdrop-blur-sm border border-blue-600/30 rounded-lg p-4 card-hover">
+                        <div class="flex items-center space-x-3">
+                            <div class="text-yellow-500 text-2xl">🚁</div>
+                            <div>
+                                <p class="text-blue-200 text-sm">Supply Chain Risk</p>
+                                <p class="text-white text-xl font-bold" id="supplyRisk">ELEVATED</p>
+                                <p class="text-xs" id="supplyDetails">Helicopter delays: +3h</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Environmental Compliance -->
+                    <div class="bg-blue-800/50 backdrop-blur-sm border border-blue-600/30 rounded-lg p-4 card-hover">
+                        <div class="flex items-center space-x-3">
+                            <div class="text-green-400 text-2xl">🌱</div>
+                            <div>
+                                <p class="text-blue-200 text-sm">Environmental Score</p>
+                                <p class="text-white text-xl font-bold" id="envScore">94.2%</p>
+                                <p class="text-xs" id="envStatus">CO₂ Emissions: Normal</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Workforce & Safety -->
+                    <div class="bg-blue-800/50 backdrop-blur-sm border border-blue-600/30 rounded-lg p-4 card-hover">
+                        <div class="flex items-center space-x-3">
+                            <div class="text-blue-400 text-2xl">👷‍♂️</div>
+                            <div>
+                                <p class="text-blue-200 text-sm">Workforce Status</p>
+                                <p class="text-white text-xl font-bold" id="workforce">287/300</p>
+                                <p class="text-xs" id="safetyDays">Safety: 423 days</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Digital Transformation -->
+                    <div class="bg-blue-800/50 backdrop-blur-sm border border-blue-600/30 rounded-lg p-4 card-hover">
+                        <div class="flex items-center space-x-3">
+                            <div class="text-purple-400 text-2xl">🤖</div>
+                            <div>
+                                <p class="text-blue-200 text-sm">AI Efficiency</p>
+                                <p class="text-white text-xl font-bold" id="aiEfficiency">+12.3%</p>
+                                <p class="text-xs" id="digitalStatus">Predictive maintenance</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Secondary KPIs Row -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                    <!-- Energy Transition Metrics -->
+                    <div class="bg-blue-800/50 backdrop-blur-sm border border-blue-600/30 rounded-lg p-4 card-hover">
+                        <div class="flex items-center space-x-3">
+                            <div class="text-green-500 text-2xl">⚡</div>
+                            <div>
+                                <p class="text-blue-200 text-sm">Renewable Integration</p>
+                                <p class="text-white text-2xl font-bold" id="renewablePercent">23.7%</p>
+                                <p class="text-green-400 text-xs">Target: 30% by 2026</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cybersecurity Status -->
+                    <div class="bg-blue-800/50 backdrop-blur-sm border border-blue-600/30 rounded-lg p-4 card-hover">
+                        <div class="flex items-center space-x-3">
+                            <div class="text-red-600 text-2xl">🔒</div>
+                            <div>
+                                <p class="text-blue-200 text-sm">Cyber Security</p>
+                                <p class="text-white text-2xl font-bold" id="cyberStatus">SECURE</p>
+                                <p class="text-red-400 text-xs">Threats blocked: 47</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Regulatory Compliance -->
+                    <div class="bg-blue-800/50 backdrop-blur-sm border border-blue-600/30 rounded-lg p-4 card-hover">
+                        <div class="flex items-center space-x-3">
+                            <div class="text-yellow-400 text-2xl">📋</div>
+                            <div>
+                                <p class="text-blue-200 text-sm">Regulatory Status</p>
+                                <p class="text-white text-2xl font-bold" id="regulatory">98.1%</p>
+                                <p class="text-yellow-400 text-xs">2 pending approvals</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cost Per Barrel -->
+                    <div class="bg-blue-800/50 backdrop-blur-sm border border-blue-600/30 rounded-lg p-4 card-hover">
+                        <div class="flex items-center space-x-3">
+                            <div class="text-orange-500 text-2xl">🛢️</div>
+                            <div>
+                                <p class="text-blue-200 text-sm">Cost Per Barrel</p>
+                                <p class="text-white text-2xl font-bold" id="costPerBarrel">$18.7</p>
+                                <p class="text-orange-400 text-xs">Industry avg: $22.1</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                    <!-- Real-time Weather Impact on Operations -->
+                    <div class="bg-blue-800/50 backdrop-blur-sm border border-blue-600/30 rounded-lg p-6 card-hover">
+                        <h3 class="text-white text-lg font-semibold mb-4">🌪️ Weather Impact vs Production Efficiency</h3>
+                        <div class="chart-container">
+                            <div class="flex items-end h-full space-x-2" id="weatherChart">
+                                <!-- Chart will be generated here -->
+                            </div>
+                            <div class="mt-4 flex space-x-4">
+                                <div class="flex items-center">
+                                    <div class="w-3 h-3 bg-blue-500 rounded mr-2"></div>
+                                    <span class="text-blue-200 text-sm">Production %</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <div class="w-3 h-3 bg-red-500 rounded mr-2"></div>
+                                    <span class="text-blue-200 text-sm">Weather Delay h</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4 text-sm text-blue-200">
+                            <p>⚠️ Critical threshold: <span class="text-red-400 font-semibold">Wave height >4.5m</span></p>
+                            <p>📊 Current efficiency: <span class="text-white font-semibold">87.3%</span></p>
+                        </div>
+                    </div>
+
+                    <!-- Supply Chain & Logistics Optimization -->
+                    <div class="bg-blue-800/50 backdrop-blur-sm border border-blue-600/30 rounded-lg p-6 card-hover">
+                        <h3 class="text-white text-lg font-semibold mb-4">🚁 Supply Chain Performance vs Budget</h3>
+                        <div class="chart-container">
+                            <div class="flex items-end h-full space-x-2" id="supplyChart">
+                                <!-- Chart will be generated here -->
+                            </div>
+                            <div class="mt-4 flex space-x-4">
+                                <div class="flex items-center">
+                                    <div class="w-3 h-3 bg-green-500 rounded mr-2"></div>
+                                    <span class="text-blue-200 text-sm">Delivery Success %</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <div class="w-3 h-3 bg-orange-500 rounded mr-2"></div>
+                                    <span class="text-blue-200 text-sm">Cost Variance %</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-4 text-sm text-blue-200">
+                            <p>🎯 Next critical delivery: <span class="text-white font-semibold">14:30 UTC</span></p>
+                            <p>💰 Cost optimization: <span class="text-green-400 font-semibold">-8.2% vs budget</span></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Real-time Challenge Monitoring -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <!-- Current Industry Challenges -->
+                    <div class="bg-blue-800/50 backdrop-blur-sm border border-blue-600/30 rounded-lg p-6 card-hover">
+                        <h3 class="text-white text-lg font-semibold mb-4">⚠️ Real-time Challenge Monitor</h3>
+                        <div class="space-y-4" id="challengesList">
+                            <!-- Dynamic challenges will be populated here -->
+                        </div>
+                    </div>
+
+                    <!-- AI-Powered Solutions -->
+                    <div class="bg-blue-800/50 backdrop-blur-sm border border-blue-600/30 rounded-lg p-6 card-hover">
+                        <h3 class="text-white text-lg font-semibold mb-4">🤖 AI-Powered Solutions</h3>
+                        <div class="space-y-4" id="solutionsList">
+                            <!-- AI solutions will be populated here -->
+                        </div>
+                        <div class="mt-4 text-xs text-blue-200">
+                            <p>Last AI analysis: <span class="text-white">Real-time</span></p>
+                            <p>Model accuracy: <span class="text-green-400">94.7%</span></p>
+                            <p>Cost savings YTD: <span class="text-green-400">$47.2M</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back to main site button -->
+    <div id="back-button" style="position: fixed; top: 20px; left: 20px; z-index: 1000; display: none;">
+        <button onclick="goBack()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow-lg transition-colors duration-200">
+           <!--← Back to Main Site -->
+        </button>
+    </div>
+
+    <script>
+        // Global variables
+        let isLive = true;
+        let updateInterval;
+        let currentChallengeIndex = 0;
+        let weatherData = null;
+        let lastWeatherUpdate = 0;
+
+        // Johan Castberg FPSO coordinates in Barents Sea (240km NW of Hammerfest)
+        const FPSO_COORDINATES = {
+            lat: 72.0, // Approximate latitude for Barents Sea location
+            lon: 21.5, // Approximate longitude for Barents Sea location
+            name: "Offshore technology"
+        };
+
+        // Fetch real weather data from Open-Meteo Marine API (free, no API key required)
+        async function fetchRealWeatherData() {
+            try {
+                const now = Date.now();
+                // Only fetch new data every 10 minutes to avoid overwhelming the API
+                if (weatherData && now - lastWeatherUpdate < 600000) {
+                    return weatherData;
+                }
+
+                const url = `https://marine-api.open-meteo.com/v1/marine?latitude=${FPSO_COORDINATES.lat}&longitude=${FPSO_COORDINATES.lon}&current=wave_height,wave_direction,wave_period,wind_wave_height,wind_wave_direction,wind_wave_period&hourly=wave_height,wave_direction,wave_period,wind_wave_height,swell_wave_height&timezone=auto&forecast_days=7`;
+                
+                console.log('Fetching real weather data for Barents Sea...');
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    throw new Error(`Weather API error: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                console.log('Weather data received:', data);
+                
+                weatherData = {
+                    current: {
+                        waveHeight: data.current?.wave_height || 0,
+                        waveDirection: data.current?.wave_direction || 0,
+                        wavePeriod: data.current?.wave_period || 0,
+                        windWaveHeight: data.current?.wind_wave_height || 0,
+                        timestamp: data.current?.time || new Date().toISOString()
+                    },
+                    hourly: {
+                        times: data.hourly?.time || [],
+                        waveHeights: data.hourly?.wave_height || [],
+                        swellHeights: data.hourly?.swell_wave_height || []
+                    },
+                    location: FPSO_COORDINATES.name
+                };
+                
+                lastWeatherUpdate = now;
+                return weatherData;
+                
+            } catch (error) {
+                console.error('Error fetching weather data:', error);
+                // Return simulated data as fallback
+                return getSimulatedWeatherData();
+            }
+        }
+
+        // Fallback simulated weather data for Barents Sea conditions
+        function getSimulatedWeatherData() {
+            const now = new Date();
+            const hour = now.getHours();
+            
+            // Barents Sea typical conditions - harsher than North Sea
+            const baseWaveHeight = 2.5 + Math.sin(hour * Math.PI / 12) * 1.5 + Math.random() * 2;
+            const seasonal = Math.sin((now.getMonth() - 3) * Math.PI / 6); // Winter storms
+            const waveHeight = Math.max(1.0, baseWaveHeight + seasonal * 2);
+            
+            return {
+                current: {
+                    waveHeight: Number(waveHeight.toFixed(1)),
+                    waveDirection: Math.floor(Math.random() * 360),
+                    wavePeriod: 8 + Math.random() * 6,
+                    windWaveHeight: Number((waveHeight * 0.7).toFixed(1)),
+                    timestamp: now.toISOString()
+                },
+                hourly: {
+                    times: Array.from({length: 24}, (_, i) => new Date(now.getTime() + i * 3600000).toISOString()),
+                    waveHeights: Array.from({length: 24}, () => 1 + Math.random() * 5),
+                    swellHeights: Array.from({length: 24}, () => 0.5 + Math.random() * 3)
+                },
+                location: FPSO_COORDINATES.name + " (Simulated)"
+            };
+        }
+
+        // Determine operational status based on real wave conditions
+        function getOperationalStatus(waveHeight, windWaveHeight) {
+            // Barents Sea operational thresholds (more conservative due to harsh conditions)
+            if (waveHeight > 5.5 || windWaveHeight > 4.0) {
+                return {
+                    status: 'SUSPENDED',
+                    risk: 'CRITICAL',
+                    color: 'text-red-400',
+                    icon: '🚨',
+                    reason: 'Extreme sea state'
+                };
+            } else if (waveHeight > 4.0 || windWaveHeight > 3.0) {
+                return {
+                    status: 'LIMITED',
+                    risk: 'HIGH',
+                    color: 'text-yellow-400',
+                    icon: '⚠️',
+                    reason: 'Rough conditions'
+                };
+            } else if (waveHeight > 2.5) {
+                return {
+                    status: 'OPERATIONAL',
+                    risk: 'MODERATE',
+                    color: 'text-orange-400',
+                    icon: '🌊',
+                    reason: 'Moderate seas'
+                };
+            } else {
+                return {
+                    status: 'OPTIMAL',
+                    risk: 'LOW',
+                    color: 'text-green-400',
+                    icon: '✅',
+                    reason: 'Good conditions'
+                };
+            }
+        }
+
+        // Calculate time to next weather window closure
+        function getNextWeatherWindow(hourlyData) {
+            if (!hourlyData || !hourlyData.waveHeights) return "Data unavailable";
+            
+            const currentHour = new Date().getHours();
+            let hoursToChange = 0;
+            
+            for (let i = 1; i < 24; i++) {
+                const futureWave = hourlyData.waveHeights[i];
+                const currentWave = hourlyData.waveHeights[0];
+                
+                // Check for significant change in conditions
+                if (Math.abs(futureWave - currentWave) > 1.5) {
+                    hoursToChange = i;
+                    break;
+                }
+            }
+            
+            if (hoursToChange === 0) return "Stable for 24h+";
+            
+            const changeType = hourlyData.waveHeights[hoursToChange] > hourlyData.waveHeights[0] ? "deterioration" : "improvement";
+            return `${changeType} in ${hoursToChange}h`;
+        }
+        const offshoreChallenges = [
+            {
+                type: 'critical',
+                icon: '🌊',
+                title: 'Extreme Weather Events',
+                description: 'Increasing frequency of severe storms affecting operations',
+                impact: 'Production loss: 15.2% above historical average',
+                confidence: 96
+            },
+            {
+                type: 'warning',
+                icon: '🛠️',
+                title: 'Aging Infrastructure',
+                description: 'Equipment beyond design life requiring immediate attention',
+                impact: 'Maintenance costs: +23% over budget',
+                confidence: 89
+            },
+            {
+                type: 'critical',
+                icon: '🔒',
+                title: 'Cybersecurity Threats',
+                description: 'Ransomware attempts targeting OT systems',
+                impact: '47 blocked attacks in last 24h',
+                confidence: 98
+            },
+            {
+                type: 'warning',
+                icon: '👷‍♂️',
+                title: 'Skilled Labor Shortage',
+                description: 'Critical shortage of experienced offshore workers',
+                impact: '13% positions unfilled, delays in rotations',
+                confidence: 92
+            },
+            {
+                type: 'info',
+                icon: '🌱',
+                title: 'Environmental Regulations',
+                description: 'New CO₂ emission limits affecting operations',
+                impact: 'Compliance costs: $2.3M additional investment',
+                confidence: 85
+            },
+            {
+                type: 'critical',
+                icon: '⛽',
+                title: 'Supply Chain Disruption',
+                description: 'Global supply chain affecting critical spare parts',
+                impact: 'Lead times increased by 180%',
+                confidence: 94
+            }
+        ];
+
+        const aiSolutions = [
+            {
+                icon: '🔮',
+                title: 'Predictive Weather Modeling',
+                description: 'AI-enhanced 14-day weather forecasting for optimal operation windows',
+                savings: '$12.4M annually',
+                implementation: 'Active',
+                confidence: 94
+            },
+            {
+                icon: '🔧',
+                title: 'Predictive Maintenance',
+                description: 'ML algorithms detecting equipment failures 72h in advance',
+                savings: '$8.7M in avoided downtime',
+                implementation: 'Expanding',
+                confidence: 91
+            },
+            {
+                icon: '🚁',
+                title: 'Dynamic Logistics Optimization',
+                description: 'Real-time route optimization for helicopter and vessel operations',
+                savings: '18% fuel reduction',
+                implementation: 'Pilot phase',
+                confidence: 87
+            },
+            {
+                icon: '👥',
+                title: 'Digital Twin Training',
+                description: 'VR-based training reducing need for experienced offshore personnel',
+                savings: '45% training time reduction',
+                implementation: 'Testing',
+                confidence: 82
+            }
+        ];
+
+        // Weather and production data simulation
+        const weatherProductionData = [
+            { day: 'Mon', production: 95, weatherDelay: 2, waveHeight: 2.1 },
+            { day: 'Tue', production: 87, weatherDelay: 8, waveHeight: 3.8 },
+            { day: 'Wed', production: 72, weatherDelay: 15, waveHeight: 4.9 },
+            { day: 'Thu', production: 45, weatherDelay: 28, waveHeight: 6.2 },
+            { day: 'Fri', production: 38, weatherDelay: 31, waveHeight: 6.8 },
+            { day: 'Sat', production: 65, weatherDelay: 18, waveHeight: 4.1 },
+            { day: 'Sun', production: 89, weatherDelay: 6, waveHeight: 2.9 }
+        ];
+
+        const supplyChainData = [
+            { month: 'Jan', deliverySuccess: 96, costVariance: -2 },
+            { month: 'Feb', deliverySuccess: 89, costVariance: 5 },
+            { month: 'Mar', deliverySuccess: 78, costVariance: 12 },
+            { month: 'Apr', deliverySuccess: 85, costVariance: 8 },
+            { month: 'May', deliverySuccess: 91, costVariance: 3 },
+            { month: 'Jun', deliverySuccess: 94, costVariance: -1 },
+            { month: 'Jul', deliverySuccess: 88, costVariance: 7 },
+            { month: 'Aug', deliverySuccess: 92, costVariance: 2 }
+        ];
+
+        // Generate realistic live data with real weather integration
+        async function generateLiveData() {
+            const now = new Date();
+            
+            // Get real weather data
+            const weather = await fetchRealWeatherData();
+            const operationalStatus = getOperationalStatus(weather.current.waveHeight, weather.current.windWaveHeight);
+            const nextWindow = getNextWeatherWindow(weather.hourly);
+            
+            // Calculate supply chain delays based on real weather
+            const baseSupplyDelay = weather.current.waveHeight > 4 ? Math.floor(Math.random() * 12) + 4 : 
+                                   weather.current.waveHeight > 2.5 ? Math.floor(Math.random() * 6) + 1 :
+                                   Math.floor(Math.random() * 3);
+            
+            // Environmental score affected by operational intensity
+            const envScore = operationalStatus.status === 'SUSPENDED' ? 96 + Math.random() * 3 :
+                            operationalStatus.status === 'LIMITED' ? 91 + Math.random() * 4 :
+                            88 + Math.random() * 8;
+            
+            // Workforce variations due to weather conditions
+            const weatherAffectedWorkforce = operationalStatus.status === 'SUSPENDED' ? -15 :
+                                           operationalStatus.status === 'LIMITED' ? -8 : 0;
+            const workforce = 285 + weatherAffectedWorkforce + Math.floor(Math.random() * 10);
+            
+            // AI efficiency based on conditions
+            const aiEfficiency = operationalStatus.status === 'OPTIMAL' ? 12 + Math.random() * 6 :
+                               operationalStatus.status === 'OPERATIONAL' ? 8 + Math.random() * 6 :
+                               operationalStatus.status === 'LIMITED' ? 4 + Math.random() * 4 :
+                               1 + Math.random() * 3;
+            
+            // Renewable energy percentage (wind affected by weather)
+            const renewable = 18 + Math.random() * 12 + (weather.current.waveHeight > 3 ? 5 : 0);
+            
+            // Cost per barrel increases with harsh conditions
+            const weatherCostMultiplier = operationalStatus.status === 'SUSPENDED' ? 1.4 :
+                                        operationalStatus.status === 'LIMITED' ? 1.2 : 1.0;
+            const costPerBarrel = (17 + Math.random() * 4) * weatherCostMultiplier;
+            
+            return {
+                // Real weather data
+                weatherStatus: operationalStatus.status,
+                weatherIcon: operationalStatus.icon,
+                weatherRisk: `${operationalStatus.reason} | ${nextWindow}`,
+                weatherRiskColor: operationalStatus.color,
+                waveHeight: weather.current.waveHeight,
+                windWaveHeight: weather.current.windWaveHeight,
+                wavePeriod: weather.current.wavePeriod?.toFixed(1) || 'N/A',
+                waveDirection: weather.current.waveDirection || 0,
+                weatherLocation: weather.location,
+                
+                // Derived operational data
+                supplyRisk: baseSupplyDelay > 8 ? 'CRITICAL' : baseSupplyDelay > 4 ? 'ELEVATED' : 'NORMAL',
+                supplyDetails: weather.current.waveHeight > 4 ? 
+                             `Weather hold: ${baseSupplyDelay}h` : 
+                             `Normal ops: +${baseSupplyDelay}h`,
+                             
+                envScore: envScore.toFixed(1),
+                envStatus: envScore > 95 ? 'Excellent' : envScore > 90 ? 'Good' : 'Monitor',
+                workforce: `${workforce}/300`,
+                safetyDays: 420 + Math.floor(Math.random() * 10),
+                aiEfficiency: `+${aiEfficiency.toFixed(1)}%`,
+                digitalStatus: aiEfficiency > 12 ? 'Optimizing' : aiEfficiency > 8 ? 'Active' : 'Limited',
+                renewable: renewable.toFixed(1),
+                costPerBarrel: costPerBarrel.toFixed(1),
+                operationalStatus: operationalStatus.status,
+                operationalColor: operationalStatus.color,
+                lastUpdate: now.toLocaleTimeString(),
+                
+                // Weather forecast summary
+                forecast: {
+                    maxWave24h: Math.max(...(weather.hourly.waveHeights || [2])).toFixed(1),
+                    avgWave24h: (weather.hourly.waveHeights?.reduce((a, b) => a + b, 0) / weather.hourly.waveHeights?.length || 3).toFixed(1)
+                }
+            };
+        }
+
+        // Update live data with real weather integration
+        async function updateLiveData() {
+            if (!isLive) return;
+            
+            try {
+                const data = await generateLiveData();
+                
+                // Update primary KPIs with real weather data
+                document.getElementById('weatherStatus').textContent = data.weatherStatus;
+                document.getElementById('weatherIcon').textContent = data.weatherIcon;
+                document.getElementById('weatherRisk').textContent = data.weatherRisk;
+                document.getElementById('weatherRisk').className = `text-xs ${data.weatherRiskColor}`;
+                
+                document.getElementById('supplyRisk').textContent = data.supplyRisk;
+                document.getElementById('supplyDetails').textContent = data.supplyDetails;
+                
+                document.getElementById('envScore').textContent = `${data.envScore}%`;
+                document.getElementById('envStatus').textContent = `CO₂ Emissions: ${data.envStatus}`;
+                
+                document.getElementById('workforce').textContent = data.workforce;
+                document.getElementById('safetyDays').textContent = `Safety: ${data.safetyDays} days`;
+                
+                document.getElementById('aiEfficiency').textContent = data.aiEfficiency;
+                document.getElementById('digitalStatus').textContent = data.digitalStatus;
+                
+                // Update secondary KPIs
+                document.getElementById('renewablePercent').textContent = `${data.renewable}%`;
+                document.getElementById('cyberStatus').textContent = 'SECURE';
+                document.getElementById('regulatory').textContent = '98.1%';
+                document.getElementById('costPerBarrel').textContent = `${data.costPerBarrel}`;
+                
+                document.getElementById('operationalStatus').textContent = data.operationalStatus;
+                document.getElementById('operationalStatus').className = `font-semibold ${data.operationalColor}`;
+                
+                document.getElementById('lastUpdate').textContent = data.lastUpdate;
+                
+                // Update weather details in console for monitoring
+                console.log(`Weather Update: Wave Height: ${data.waveHeight}m, Wind Wave: ${data.windWaveHeight}m, Period: ${data.wavePeriod}s, Location: ${data.weatherLocation}`);
+                
+                // Update alerts with real weather conditions
+                updateAlertsWithRealWeather(data);
+                
+                // Update weather forecast data
+                updateWeatherForecast(data);
+                
+            } catch (error) {
+                console.error('Error updating live data:', error);
+                // Continue with fallback data if weather API fails
+            }
+        }
+
+        // Update alerts based on real weather conditions
+        function updateAlertsWithRealWeather(data) {
+            const alertsContainer = document.getElementById('alertsBanner');
+            alertsContainer.innerHTML = '';
+            
+            if (data.weatherStatus === 'SUSPENDED') {
+                const alert = document.createElement('div');
+                alert.className = 'critical-alert border border-red-500 rounded-lg p-3 text-center';
+                alert.innerHTML = `
+                    <div class="flex items-center justify-center space-x-2">
+                        <span class="text-red-400 text-xl">🚨</span>
+                        <span class="text-white font-bold">CRITICAL WEATHER ALERT - BARENTS SEA</span>
+                        <span class="text-red-400 text-xl">🚨</span>
+                    </div>
+                    <p class="text-red-200 text-sm mt-1">All offshore operations suspended - Wave Height: ${data.waveHeight}m | Wind Wave: ${data.windWaveHeight}m</p>
+                    <p class="text-red-300 text-xs mt-1">Source: ${data.weatherLocation}</p>
+                `;
+                alertsContainer.appendChild(alert);
+            } else if (data.weatherStatus === 'LIMITED') {
+                const alert = document.createElement('div');
+                alert.className = 'warning-alert border border-orange-500 rounded-lg p-3 text-center';
+                alert.innerHTML = `
+                    <div class="flex items-center justify-center space-x-2">
+                        <span class="text-orange-400 text-xl">⚠️</span>
+                        <span class="text-white font-bold">WEATHER WARNING - LIMITED OPERATIONS</span>
+                    </div>
+                    <p class="text-orange-200 text-sm mt-1">Wave Height: ${data.waveHeight}m | ${data.weatherRisk}</p>
+                    <p class="text-orange-300 text-xs mt-1">Monitor conditions closely - Critical operations only</p>
+                `;
+                alertsContainer.appendChild(alert);
+            } else if (data.supplyRisk === 'CRITICAL') {
+                const alert = document.createElement('div');
+                alert.className = 'warning-alert border border-yellow-500 rounded-lg p-3 text-center';
+                alert.innerHTML = `
+                    <div class="flex items-center justify-center space-x-2">
+                        <span class="text-yellow-400 text-xl">🚁</span>
+                        <span class="text-white font-bold">SUPPLY CHAIN DISRUPTION</span>
+                    </div>
+                    <p class="text-yellow-200 text-sm mt-1">${data.supplyDetails} due to weather conditions</p>
+                `;
+                alertsContainer.appendChild(alert);
+            }
+        }
+
+        // Update weather forecast information
+        function updateWeatherForecast(data) {
+            // Update the weather chart with more detailed information
+            const chartTitle = document.querySelector('h3:contains("Weather Impact")');
+            if (chartTitle) {
+                chartTitle.innerHTML = `🌪️ Real-time Barents Sea Conditions vs Production`;
+            }
+            
+            // Add real-time weather details to the chart area
+            const weatherDetails = document.querySelector('#weatherChart').parentElement;
+            const existingDetails = weatherDetails.querySelector('.weather-details');
+            if (existingDetails) {
+                existingDetails.remove();
+            }
+            
+            const detailsDiv = document.createElement('div');
+            detailsDiv.className = 'weather-details mt-2 p-3 bg-blue-900/20 rounded border border-blue-600/30';
+            detailsDiv.innerHTML = `
+                <div class="grid grid-cols-2 gap-4 text-xs text-blue-200">
+                    <div>
+                        <p><strong class="text-white">Current Wave Height:</strong> ${data.waveHeight}m</p>
+                        <p><strong class="text-white">Wind Wave Height:</strong> ${data.windWaveHeight}m</p>
+                    </div>
+                    <div>
+                        <p><strong class="text-white">Wave Period:</strong> ${data.wavePeriod}s</p>
+                        <p><strong class="text-white">24h Forecast:</strong> Max ${data.forecast?.maxWave24h || 'N/A'}m</p>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-400 mt-2">Data Source: Open-Meteo Marine API | Location: ${data.weatherLocation}</p>
+            `;
+            weatherDetails.appendChild(detailsDiv);
+        }
+
+        // Update rotating challenges
+        function updateChallenges() {
+            const container = document.getElementById('challengesList');
+            container.innerHTML = '';
+            
+            // Show 3 challenges at a time, rotating
+            for (let i = 0; i < 3; i++) {
+                const challenge = offshoreChallenges[(currentChallengeIndex + i) % offshoreChallenges.length];
+                const div = document.createElement('div');
+                div.className = `flex items-start space-x-3 p-3 rounded-lg border ${
+                    challenge.type === 'critical' ? 'bg-red-900/30 border-red-600/30' : 
+                    challenge.type === 'warning' ? 'bg-yellow-900/30 border-yellow-600/30' : 
+                    'bg-blue-900/30 border-blue-600/30'
+                }`;
+                
+                div.innerHTML = `
+                    <div class="text-lg mt-0.5 flex-shrink-0">${challenge.icon}</div>
+                    <div class="flex-1">
+                        <p class="text-white font-medium text-sm">${challenge.title}</p>
+                        <p class="text-gray-300 text-xs mt-1">${challenge.description}</p>
+                        <p class="text-gray-400 text-xs mt-1">${challenge.impact}</p>
+                        <div class="flex items-center mt-2 space-x-2">
+                            <span class="text-xs px-2 py-1 rounded ${
+                                challenge.type === 'critical' ? 'bg-red-600/20 text-red-300' :
+                                challenge.type === 'warning' ? 'bg-yellow-600/20 text-yellow-300' :
+                                'bg-blue-600/20 text-blue-300'
+                            }">${challenge.type.toUpperCase()}</span>
+                            <span class="text-xs text-gray-400">AI Confidence: ${challenge.confidence}%</span>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(div);
+            }
+        }
+
+        // Update AI solutions
+        function updateSolutions() {
+            const container = document.getElementById('solutionsList');
+            container.innerHTML = '';
+            
+            // Show 2 solutions at a time, rotating
+            for (let i = 0; i < 2; i++) {
+                const solution = aiSolutions[(currentChallengeIndex + i) % aiSolutions.length];
+                const div = document.createElement('div');
+                div.className = 'flex items-start space-x-3 p-3 bg-green-900/30 rounded-lg border border-green-600/30';
+                
+                div.innerHTML = `
+                    <div class="text-lg mt-0.5 flex-shrink-0">${solution.icon}</div>
+                    <div class="flex-1">
+                        <p class="text-white font-medium text-sm">${solution.title}</p>
+                        <p class="text-green-200 text-xs mt-1">${solution.description}</p>
+                        <div class="flex items-center justify-between mt-2">
+                            <span class="text-xs bg-green-600/20 text-green-300 px-2 py-1 rounded">${solution.implementation}</span>
+                            <span class="text-xs text-green-400">${solution.savings}</span>
+                        </div>
+                        <div class="mt-1">
+                            <span class="text-xs text-gray-400">Success Rate: ${solution.confidence}%</span>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(div);
+            }
+        }
+
+        // Toggle live updates
+        function toggleLive() {
+            isLive = !isLive;
+            const button = document.getElementById('liveToggle');
+            button.textContent = isLive ? 'Pause' : 'Resume';
+            
+            if (isLive) {
+                updateInterval = setInterval(() => {
+                    updateLiveData();
+                    // Rotate challenges every 10 seconds
+                    if (Math.random() > 0.7) {
+                        currentChallengeIndex = (currentChallengeIndex + 1) % offshoreChallenges.length;
+                    }
+                }, 3000);
+            } else {
+                clearInterval(updateInterval);
+            }
+        }
+
+        // Create weather vs production chart
+        function createWeatherChart() {
+            const container = document.getElementById('weatherChart');
+            const maxProduction = 100;
+            const maxDelay = Math.max(...weatherProductionData.map(d => d.weatherDelay));
+            
+            weatherProductionData.forEach(data => {
+                const dayContainer = document.createElement('div');
+                dayContainer.className = 'flex flex-col items-center flex-1';
+                
+                const productionHeight = (data.production / maxProduction) * 100;
+                const delayHeight = (data.weatherDelay / maxDelay) * 80;
+                
+                // Color coding based on wave height
+                const productionColor = data.waveHeight > 5 ? 'bg-red-500' : 
+                                      data.waveHeight > 3 ? 'bg-yellow-500' : 'bg-green-500';
+                const delayColor = data.waveHeight > 5 ? 'bg-red-600' : 
+                                 data.waveHeight > 3 ? 'bg-orange-500' : 'bg-blue-500';
+                
+                dayContainer.innerHTML = `
+                    <div class="flex items-end h-32 space-x-1">
+                        <div class="chart-bar ${productionColor}" style="height: ${productionHeight}%; width: 8px;" 
+                             title="Production: ${data.production}% | Wave: ${data.waveHeight}m"></div>
+                        <div class="chart-bar ${delayColor}" style="height: ${delayHeight}%; width: 8px;" 
+                             title="Weather Delay: ${data.weatherDelay}h | Wave: ${data.waveHeight}m"></div>
+                    </div>
+                    <span class="text-xs text-blue-200 mt-1">${data.day}</span>
+                `;
+                
+                container.appendChild(dayContainer);
+            });
+        }
+
+        // Create supply chain performance chart
+        function createSupplyChart() {
+            const container = document.getElementById('supplyChart');
+            const maxSuccess = 100;
+            const maxVariance = Math.max(...supplyChainData.map(d => Math.abs(d.costVariance)));
+            
+            supplyChainData.forEach(data => {
+                const monthContainer = document.createElement('div');
+                monthContainer.className = 'flex flex-col items-center flex-1';
+                
+                const successHeight = (data.deliverySuccess / maxSuccess) * 100;
+                const varianceHeight = (Math.abs(data.costVariance) / maxVariance) * 80;
+                
+                // Color coding for performance
+                const successColor = data.deliverySuccess > 90 ? 'bg-green-500' : 
+                                   data.deliverySuccess > 80 ? 'bg-yellow-500' : 'bg-red-500';
+                const varianceColor = data.costVariance < 0 ? 'bg-green-600' : 
+                                    data.costVariance < 5 ? 'bg-orange-500' : 'bg-red-600';
+                
+                monthContainer.innerHTML = `
+                    <div class="flex items-end h-32 space-x-1">
+                        <div class="chart-bar ${successColor}" style="height: ${successHeight}%; width: 8px;" 
+                             title="Delivery Success: ${data.deliverySuccess}%"></div>
+                        <div class="chart-bar ${varianceColor}" style="height: ${varianceHeight}%; width: 8px;" 
+                             title="Cost Variance: ${data.costVariance > 0 ? '+' : ''}${data.costVariance}%"></div>
+                    </div>
+                    <span class="text-xs text-blue-200 mt-1">${data.month}</span>
+                `;
+                
+                container.appendChild(monthContainer);
+            });
+        }
+
+        // Navigation function
+        function goBack() {
+            window.history.back();
+        }
+
+        // Initialize dashboard with industry-specific data
+        function initDashboard() {
+            try {
+                // Hide loading screen and show dashboard
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('dashboard-root').style.display = 'block';
+                document.getElementById('back-button').style.display = 'block';
+                
+                // Create charts with real offshore data
+                createWeatherChart();
+                createSupplyChart();
+                
+                // Initialize challenges and solutions
+                updateChallenges();
+                updateSolutions();
+                
+                // Start live updates with real weather integration
+                updateLiveData();
+                updateInterval = setInterval(() => {
+                    updateLiveData();
+                    // Rotate challenges and solutions periodically
+                    if (Math.random() > 0.8) {
+                        currentChallengeIndex = (currentChallengeIndex + 1) % offshoreChallenges.length;
+                        updateChallenges();
+                        updateSolutions();
+                    }
+                }, 10000); // Update every 10 seconds for weather data
+                
+                // Also fetch weather data immediately on startup
+                fetchRealWeatherData().then(() => {
+                    console.log('Initial weather data loaded for Barents Sea');
+                });
+                
+                console.log('Barents Sea Offshore Operations Dashboard loaded with real weather data!');
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+                document.getElementById('loading').innerHTML = `
+                    <div class="text-center">
+                        <div class="text-red-500 text-6xl mb-4">❌</div>
+                        <p class="text-white text-lg">Error Loading Offshore Dashboard</p>
+                        <p class="text-red-300 text-sm">${error.message}</p>
+                        <button onclick="location.reload()" class="mt-4 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+                            Retry Connection
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        // Initialize after page loads
+        window.addEventListener('load', () => {
+            setTimeout(initDashboard, 2000);
+        });
+
+        // Fallback initialization
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                if (document.getElementById('dashboard-root').style.display === 'none') {
+                    console.log('Fallback initialization triggered');
+                    initDashboard();
+                }
+            }, 5000);
+        });
+    </script>
+</body>
+</html>
